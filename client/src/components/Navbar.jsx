@@ -23,8 +23,12 @@ import {
   MenuItem,
   useTheme,
 } from "@mui/material";
+import { useLogout } from '../hooks/useLogout'
+import { useAuthContext } from '../hooks/useauthContext'
 
-const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
+
+
+const Navbar = ({  isSidebarOpen, setIsSidebarOpen }) => {
   const dispatch = useDispatch();
   const theme = useTheme();
 
@@ -32,6 +36,13 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
   const isOpen = Boolean(anchorEl);
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
+
+  const {logout} = useLogout()
+	const {user} = useAuthContext()
+
+	const handleLogout = () => {
+		logout()
+	}
 
   return (
     <AppBar
@@ -99,13 +110,13 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
                   fontSize="0.85rem"
                   sx={{ color: theme.palette.secondary[100] }}
                 >
-                  {user.name}
+                  {user && user.name}
                 </Typography>
                 <Typography
                   fontSize="0.75rem"
                   sx={{ color: theme.palette.secondary[200] }}
                 >
-                  {user.occupation}
+                  {user && user.occupation}
                 </Typography>
               </Box>
               <ArrowDropDownOutlined
@@ -118,7 +129,7 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
               onClose={handleClose}
               anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
             >
-              <MenuItem onClick={handleClose}>Log Out</MenuItem>
+              <MenuItem onClick={handleLogout}>Log Out</MenuItem>
             </Menu>
           </FlexBetween>
         </FlexBetween>

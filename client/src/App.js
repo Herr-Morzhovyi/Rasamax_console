@@ -16,10 +16,15 @@ import Monthly from "scenes/monthly";
 import Breakdown from "scenes/breakdown";
 import Admin from "scenes/admin";
 import Performance from "scenes/performance";
+import Login from "scenes/login";
+import Signup from "scenes/signup";
+
+import { useAuthContext } from 'hooks/useauthContext';
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
+  const {user} = useAuthContext();
   return (
     <div className="app">
       <BrowserRouter>
@@ -27,18 +32,20 @@ function App() {
           <CssBaseline />
           <Routes>
             <Route element={<Layout />}>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/products" element={<Products />} />
-              <Route path="/customers" element={<Customers />} />
-              <Route path="/transactions" element={<Transactions />} />
-              <Route path="/geography" element={<Geography />} />
-              <Route path="/overview" element={<Overview />} />
-              <Route path="/daily" element={<Daily />} />
-              <Route path="/monthly" element={<Monthly />} />
-              <Route path="/breakdown" element={<Breakdown />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/performance" element={<Performance />} />
+              <Route path="/" element={user ? <Navigate to="/dashboard" replace /> : <Navigate to="/login"/>} />
+              <Route path='/login' element={!user ? <Login /> : <Navigate to="/dashboard" />} />
+						  <Route path='/signup' element={!user ? <Signup /> : <Navigate to="/dashboard" />} />
+              <Route path="/dashboard" element={!user ? <Navigate to="/login"/> : <Dashboard />} />
+              <Route path="/products" element={!user ? <Navigate to="/login"/> : <Products />} />
+              <Route path="/customers" element={!user ? <Navigate to="/login"/> : <Customers />} />
+              <Route path="/transactions" element={!user ? <Navigate to="/login"/> : <Transactions />} />
+              <Route path="/geography" element={!user ? <Navigate to="/login"/> : <Geography />} />
+              <Route path="/overview" element={!user ? <Navigate to="/login"/> : <Overview />} />
+              <Route path="/daily" element={!user ? <Navigate to="/login"/> : <Daily />} />
+              <Route path="/monthly" element={!user ? <Navigate to="/login"/> : <Monthly />} />
+              <Route path="/breakdown" element={!user ? <Navigate to="/login"/> : <Breakdown />} />
+              <Route path="/admin" element={!user ? <Navigate to="/login"/> : <Admin />} />
+              <Route path="/performance" element={!user ? <Navigate to="/login"/> : <Performance />} />
             </Route>
           </Routes>
         </ThemeProvider>
